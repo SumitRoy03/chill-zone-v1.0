@@ -3,17 +3,23 @@ const chats = require("./data/data");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const app = express();
-const bodyParser = require("body-parser")
-const userRoutes = require("./routes/userRoutes")
+const userRoutes = require("./routes/userRoutes");
+const cors = require("cors");
+const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 dotenv.config();
 connectDB();
 
 app.use(express.json());
 app.use("/api/user", userRoutes);
 
+app.use(cors());
+
 app.get("/", (req, res) => {
   res.send("App is running on 5000!");
 });
+
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, console.log(`Server started on PORT : ${5000}`));
